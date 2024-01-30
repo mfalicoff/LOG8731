@@ -164,6 +164,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"  // This will print the full stack trace of exceptions
+        showStandardStreams = true  // This will display output from System.out and System.err
+    }
 }
 
 // Jacoco + coveralls
