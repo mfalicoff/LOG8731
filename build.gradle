@@ -169,6 +169,28 @@ test {
         exceptionFormat "full"  // This will print the full stack trace of exceptions
         showStandardStreams = true  // This will display output from System.out and System.err
     }
+
+    // Define a test listener to keep track of test results
+    def passed = 0
+    def failed = 0
+    def skipped = 0
+
+    afterTest { descriptor, result ->
+        if (result.resultType == org.gradle.api.tasks.testing.TestResult.ResultType.SUCCESS) {
+            passed++
+        } else if (result.resultType == org.gradle.api.tasks.testing.TestResult.ResultType.FAILURE) {
+            failed++
+        } else if (result.resultType == org.gradle.api.tasks.testing.TestResult.ResultType.SKIPPED) {
+            skipped++
+        }
+    }
+
+    // Display the summary at the end of the test execution
+    afterSuite { desc, result ->
+        if (!desc.parent) { // will match the root suite
+            println("\nTest Summary: Total: ${result.testCount}, Passed: $passed, Failed: $failed, Skipped: $skipped\n")
+        }
+    }
 }
 
 // Jacoco + coveralls
